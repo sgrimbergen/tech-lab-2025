@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { AzureOpenAI } from "openai";
+import { AzureOpenAI } from "openai/index.mjs";
 
 const openai = new AzureOpenAI({
   apiKey: process.env.AZURE_OPENAI_API_KEY,
