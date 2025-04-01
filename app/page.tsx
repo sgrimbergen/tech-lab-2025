@@ -37,15 +37,14 @@ export default function Home() {
       console.log("Parsed JSON:", jsonOrderData); // Debugging
 
       if (jsonOrderData && jsonOrderData.order && typeof jsonOrderData.order === "object") {
-        // Handle single order object
         const order = jsonOrderData.order;
-
         const updatedProductList = [];
 
         for (const item of order) {
-          // Fetch product details
           try {
-            // Here we send a message to the search LLM with only the product name
+            // Here we send a message to the search LLM with only the product name.
+            // Based on this, the model should answer with a list of objects which at least contain a name field.
+            // In line 60 you can see we use that name.
             const searchRes = await fetch("/api/search", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
