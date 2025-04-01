@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
 export default function Home() {
-  const [systemPrompt, setSystemPrompt] = useState("You are a helpful assistant.");
+  const [productRecognitionPrompt, setRecognitionPrompt] = useState("You are a helpful assistant.");
+  const [productSearchPrompt, setSearchrompt] = useState("You are a helpful assistant.");
   const [userInput, setUserInput] = useState("");
   const [chat, setChat] = useState<{ role: string; content: string }[]>([]);
   const [productList, setProductList] = useState<{ item: string; quantity: number; unit: string }[]>([]);
@@ -23,14 +24,14 @@ export default function Home() {
     const response = await fetch("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ systemPrompt, messages: newChat }),
+      body: JSON.stringify({ systemPrompt: productRecognitionPrompt, messages: newChat }),
     });
 
     const data = await response.json();
+    console.log("Model reply: ", data)
     // The reply should look like this:
     // { "order": [{ "item": "tomatoes", "quantity": 5, "unit": "bags", "sku": 8134 },...]}
 
-    let formattedResponse = data.reply;
     try {
       const jsonOrderData = JSON.parse(data.reply);
       console.log("Parsed JSON:", jsonOrderData); // Debugging
@@ -48,7 +49,7 @@ export default function Home() {
             const searchRes = await fetch("/api/search", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ product: [{ role: "user", content: item.item }] }),
+              body: JSON.stringify({ systemPrompt: productSearchPrompt, product: [{ role: "user", content: item.item }] }),
             });
             const searchData = await searchRes.json();
             console.log("Search results:", searchData)
@@ -68,31 +69,38 @@ export default function Home() {
           }
         }
         setProductList(updatedProductList);
+        setChat([...newChat, { role: "assistant", content: "Your updated order is displayed below!" }]);
       } else {
-        console.error("Invalid order format:", jsonOrderData);
+        console.log("Invalid order format:", jsonOrderData);
+        setChat([...newChat, { role: "assistant", content: "Invalid order format. Check console." }]);
       }
     } catch (error) {
       console.error("Failed to parse JSON:", error);
+      setChat([...newChat, { role: "assistant", content: "Failed to parse JSON. Check console." }]);
     }
-
-    setChat([...newChat, { role: "assistant", content: "Your updated order is displayed below!" }]);
     setUserInput("");
     setLoading(false);
   };
 
   return (
     <div className="max-w-2xl mx-auto p-6 space-y-4">
-      <span> Add the system prompt here: </span>
+      <h2 className="text-lg font-bold"> Add your product recognition prompt here: </h2>
       <Textarea
-        value={systemPrompt}
-        onChange={(e) => setSystemPrompt(e.target.value)}
+        value={productRecognitionPrompt}
+        onChange={(e) => setRecognitionPrompt(e.target.value)}
+        placeholder="Set system prompt..."
+      />
+      <h2 className="text-lg font-bold"> Add your search prompt here: </h2>
+      <Textarea
+        value={productSearchPrompt}
+        onChange={(e) => setSearchrompt(e.target.value)}
         placeholder="Set system prompt..."
       />
       <div className="border p-4 rounded-lg h-80 overflow-y-auto">
         {chat.map((msg, i) => (
           <div key={i} className={msg.role === "user" ? "text-right" : ""}>
             <p className="text-sm font-bold">{msg.role === "user" ? "You" : "AI"}</p>
-            <p className="p-2 bg-gray-100 rounded-md inline-block">{msg.content}</p>
+            <p className="p-2 bg-gray-400 rounded-md inline-block">{msg.content}</p>
           </div>
         ))}
       </div>
@@ -106,10 +114,10 @@ export default function Home() {
         {loading ? "Thinking..." : "Send"}
       </Button>
       <div className="mt-6">
-        <h2 className="text-lg font-bold">Product List</h2>
+        <h2 className="text-lg font-bold">Product List:</h2>
         <table className="w-full border-collapse border border-gray-300 mt-2">
           <thead>
-            <tr className="bg-gray-100">
+            <tr className="bg-gray-400">
               <th className="border p-2">Item</th>
               <th className="border p-2">Quantity</th>
               <th className="border p-2">Unit</th>

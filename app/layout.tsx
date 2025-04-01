@@ -1,3 +1,4 @@
+import Image from "next/image"
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -27,6 +28,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <div className="flex justify-center py-4">
+          <Image src="/logo.png" alt="Logo" width={200} height={100} />
+        </div>
         {children}
       </body>
     </html>
