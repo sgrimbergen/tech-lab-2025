@@ -1,8 +1,12 @@
 import json
 import random
+import os 
 from openai import AzureOpenAI
 import pandas as pd
+from dotenv import load_dotenv
 
+# Load environment variables from .env file for using gpt-4o-mini
+load_dotenv()
 
 def get_unit():
     """Extract the packaging method as text"""
@@ -18,12 +22,13 @@ def get_products() -> pd.DataFrame:
 def generate_order_message(productA: str, productB: str) -> str:
     prompt = "Write something here that generates an order!"
 
-    key = "COPY FROM .ENV"
-    endpoint = "COPY FROM .ENV"
-    model = "COPY FROM .ENV"
+    api_version = os.getenv("API_VERSION")
+    key = os.getenv("AZURE_OPENAI_API_KEY")
+    endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
+    model = os.getenv("AZURE_OPENAI_GPT_DEPLOYMENT")
 
     client = AzureOpenAI(
-            api_key=key, api_version="2024-10-01-preview", azure_endpoint=endpoint
+            api_key=key, api_version=api_version, azure_endpoint=endpoint
         )
     messages = [
         {"role": "user", "content": prompt},

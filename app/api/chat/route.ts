@@ -3,7 +3,7 @@ import { AzureOpenAI } from "openai/index.mjs";
 
 const openai = new AzureOpenAI({
     apiKey: process.env.AZURE_OPENAI_API_KEY,
-    apiVersion: "2024-10-01-preview",
+    apiVersion: process.env.API_VERSION,
     endpoint: process.env.AZURE_OPENAI_ENDPOINT,
     deployment: process.env.AZURE_OPENAI_GPT_DEPLOYMENT
 });
