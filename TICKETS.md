@@ -18,20 +18,20 @@ get to implement an LLM-based product search.
 > Your job is to add code in the `generate_xxxx.ipynb` notebooks in order to generate a dataset that can be used. 
 
 ### Generating a dataset for training and evaluation
-The customer didn't provide any training data, just information about the products they have. So, we will need to fabricate our own training and testing datasets. They only provided the data stored in the `data` folder.
+The customer didn't provide any training data, just information about the products they have. So, we will need to fabricate our own training and testing datasets. They only provided the data stored in the [data](./data/) folder.
 
-To do so the first thing we will do is generate a set of products from the product data, in a way they would appear in a sentence spoken by a human. Have a look at `data_generation/generate_item_examples.ipynb`. Run this file to generate a set of 20 products. The product names contain a lot of symbols and parts that a human wouldn't mention. Implement the `clean_product_name()` method so that the file generates sensible product names. For example, remove dimensions from the names. Humans probably don't mention them. The performance of the pipeline depends on the quality of this training data!
+To do so the first thing we will do is generate a set of products from the product data, in a way they would appear in a sentence spoken by a human. Have a look at [data_generation/generate_item_examples](data_generation/generate_item_examples.ipynb). Run this file to generate a set of 20 products. The product names contain a lot of symbols and parts that a human wouldn't mention. Implement the `clean_product_name()` method so that the file generates sensible product names. For example, remove dimensions from the names. Humans probably don't mention them. The performance of the pipeline depends on the quality of this training data!
 
-Once you feel like you got a good set of product names, generate as many examples as possible, maybe even with variations for the same product. Check the contents again and clean further if necessary. When done, generate order examples by running the `generate_order_examples.ipynb` file. The goal is to implement the `generate_order_example` method. There is a way to do this using LLM's, but you can also go with a more conventional approach. A basis for using GPT-4o is provided in `utils.py`
+Once you feel like you got a good set of product names, generate as many examples as possible, maybe even with variations for the same product. Check the contents again and clean further if necessary. When done, generate order examples by running the [data_generation/generate_order_examples](generate_order_examples.ipynb) file. The goal is to implement the `generate_order_example()` method. There is a way to do this using LLM's, but you can also go with a more conventional approach. A basis for using GPT-4o is provided in [utils.py](data_generation/utils.py)
 
-The sentences you generate will be stored in `data/order_examples.json`.
+The sentences you generate will be stored in [data/order_examples](data/order_examples/).
 
 <br/><br/>
 # Ticket 2: Implementing an NER solution
 
 > Your job is to write system prompts that are able to generate an order from a user message.
 
-Run the little web app we created for you using `npm run dev`. Open your browser and go to `localhost:3000`. Here you will see the app where you can do several things. The main goal is to define the 2 system prompts so that when you send a message, the items you mentioned appear in the product list at the bottom. For this to work it is important that the output of the LLMs has the right format for each step! Look at the code in `page.tsx` to understand what is needed. Keep in mind that the product data is in German!
+Run the little web app we created for you using `npm run dev`. Open your browser and go to `localhost:3000`. Here you will see the app where you can do several things. The main goal is to define the 2 system prompts so that when you send a message, the items you mentioned appear in the product list at the bottom. For this to work it is important that the output of the LLMs has the right format for each step! Look at the code in [page.tsx](app/page.tsx) to understand what is needed. Keep in mind that the product data is in German!
 
 **Note**: If you have a bug in your prompts, the app might get stuck in "thinking" mode. Open the console in your browser then you should see an error that points you in the right direction.
 
@@ -56,11 +56,11 @@ In this last ticket you will design a solution for the architecture of the whole
 
 Make groups of 3-5 people, give your team a nice name and construct an architecture block diagram for the whole system. Think about answering the following questions: 
 
-- Voicemails are not stored on side. How to get new messages into our pipeline?
+- Voicemails are not stored on-site. How to get new messages into our pipeline?
 - Where do components run: Speech recognition, entity recognition, pipeline, search
-- How does the product search get it‘s data?
+- How does the product search get its data?
 - (How) should we store order proposals?
 - What happens with the order proposals? (To webshop)
-- Make sure we don‘t violate GDPA
+- Make sure we don‘t violate GDPR
 - Do we need user authentication? Where?
 - What about training the models? Do we need extra infrastructure?
