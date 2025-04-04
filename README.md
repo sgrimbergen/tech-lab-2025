@@ -3,6 +3,8 @@
 We recommend using Ubuntu or similar Linux Operating Systems. 
 Install your favorite IDE, we've used VS Code to build this workshop. In Combination with WSL2 in Windows it also works fine.
 
+Everything below should be done in Linux or WSL, not on Windows! (Windows also works theoretically but we haven't tested that)
+
 Before starting you need to install the following: Node.js (>= 20.0.0), npm, and Python >= 3.11.
 You can ask ChatGPT how to do this for your system or follow this short guide.
 
